@@ -52,16 +52,7 @@ const data = {
 };
 
 export default function NutritionInfoTable() {
-//   const [nutritionalData, setNutritionalData] = useState<TableDataEntry[]>([]);
   const {nutritionalData, setNutritionalData} = useNutrition();
-
-//   const tableDataEntry = (nutrientInfo: Nutrient, value: number) => {
-//     const newData = {
-//       nutrientInfo: nutrientInfo,
-//       value: value,
-//     };
-//     setNutritionalData([...nutritionalData, newData]);
-//   };
 
   const changeTableData = (label: string, newValue: number) => {
     setNutritionalData((prevTableData) =>
@@ -70,9 +61,6 @@ export default function NutritionInfoTable() {
       )
     );
   };
-
-  
-  console.log(nutritionalData);
 
   return (
     <div className="text-neutral-950 bg-neutral-50 w-full rounded-md p-4">
