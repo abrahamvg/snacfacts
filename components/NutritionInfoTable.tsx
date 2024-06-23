@@ -27,32 +27,43 @@ const data = {
       label: "Energy",
       value: "energy",
       unit: "Kcal",
+      recommendedValue: 2000,
     },
     {
       label: "Sugars",
       value: "addedSugars",
       unit: "g",
+      recommendedValue: 30,
     },
     {
       label: "Fat",
       value: "fat",
       unit: "g",
+      recommendedValue: 70,
     },
     {
       label: "Protein",
       value: "protein",
       unit: "g",
+      recommendedValue: 50,
     },
     {
       label: "Cholesterol",
       value: "cholesterol",
       unit: "mg",
+      recommendedValue: 300,
     },
   ],
 };
 
-export default function NutritionInfoTable() {
-  const {nutritionalData, setNutritionalData} = useNutrition();
+export default function NutritionInfoTable({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const { nutritionalData, setNutritionalData } = useNutrition();
 
   const changeTableData = (label: string, newValue: number) => {
     setNutritionalData((prevTableData) =>
@@ -67,9 +78,7 @@ export default function NutritionInfoTable() {
       <div className="flex flex-row justify-between items-start h-24">
         <h3 className="font-bold text-xl w-1/3 text-wrap">Nutrition Info</h3>
         <div>
-          <AddNutritionDropDown
-            data={data.nutrients}
-          />
+          <AddNutritionDropDown data={data.nutrients} />
         </div>
       </div>
       <div className="content mt-4">
@@ -109,7 +118,10 @@ export default function NutritionInfoTable() {
             })}
           </TableBody>
         </Table>
-        <Button className="w-full mt-4 bg-transparent text-primary border-primary border-2 hover:bg-primary hover:text-neutral-50">Track</Button>
+        <Button className="w-full mt-4 bg-transparent text-primary border-primary border-2 hover:bg-primary hover:text-neutral-50" 
+          onClick={() => setOpen(true)}>
+          Track
+        </Button>
       </div>
     </div>
   );

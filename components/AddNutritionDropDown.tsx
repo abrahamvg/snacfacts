@@ -18,6 +18,18 @@ import clsx from "clsx";
 import { Nutrient } from "@/types/types";
 import { useNutrition } from "@/providers/dataProvider";
 
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+
 export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
   const [open, setOpen] = useState(false);
   const [nutrientQuantity, setNutrientQuantity] = useState<number>(0);
@@ -73,24 +85,27 @@ export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Select Nutrition</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup
-            value={selectedNutrient}
-            onValueChange={setSelectedNutrient}
-            className="grid grid-cols-2 gap-2 text-left"
-          >
-            {dropDownData.map((nutrient) => (
-              <DropdownMenuRadioItem
-                value={nutrient.value}
-                key={nutrient.value}
-                className={clsx("text-sm py-4 px-3 rounded-md", {
-                  "bg-secondary font-semibold":
-                    nutrient.value === selectedNutrient,
-                })}
-              >
-                {nutrient.label}
-              </DropdownMenuRadioItem>
-            ))}
-          </DropdownMenuRadioGroup>
+          <Command>
+            <CommandInput placeholder="Type or search..." />
+            <CommandList className="masked-overflow">
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandGroup heading="Nutrients">
+                {dropDownData.map((nutrient) => (
+                  <CommandItem
+                    value={nutrient.value}
+                    key={nutrient.value}
+                    className={clsx("text-sm text-black py-2 px-3 rounded-md", {
+                      "bg-secondary font-semibold":
+                        nutrient.value === selectedNutrient,
+                    })}
+                    onSelect={() => setSelectedNutrient(nutrient.value)}
+                  >
+                    {nutrient.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
 
           <DropdownMenuItem>
             <Input
