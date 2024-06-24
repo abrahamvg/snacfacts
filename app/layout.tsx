@@ -19,7 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={Copernicus.className}>{children}</body>
+      <body className={Copernicus.className}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
