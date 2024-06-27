@@ -16,7 +16,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import clsx from "clsx";
 import { Nutrient } from "@/types/types";
-import { useNutrition } from "@/providers/dataProvider";
+import { useNutrition } from "@/hooks/useNutritionHook";
 
 import {
   Command,
@@ -29,6 +29,7 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from "@/components/ui/command";
+import { useDropDownData } from "@/hooks/useDropDownData";
 
 export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
   const [open, setOpen] = useState(false);
@@ -36,8 +37,8 @@ export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
   const [selectedNutrient, setSelectedNutrient] = useState<string>(
     data[0].value
   );
-  const [dropDownData, setDropDownData] = useState<Nutrient[]>(data);
-  const { nutritionalData, setNutritionalData } = useNutrition();
+  const { dropDownData, setDropDownData } = useDropDownData();
+  const { setNutritionalData } = useNutrition();
 
   const handleOpen = () => {
     setOpen(!open);

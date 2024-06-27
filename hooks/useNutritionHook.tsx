@@ -1,5 +1,5 @@
 'use client';
-import { Nutrient, TableDataEntry } from "@/types/types";
+import { TableDataEntry } from "@/types/types";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 interface NutritionProviderProps {
@@ -19,7 +19,7 @@ export const NutritionProvider = ({ children }: NutritionProviderProps) => {
   const [nutritionalData, setNutritionalData] = useState<TableDataEntry[]>([]);
 
   return (
-    <NutritionContext.Provider value={{ nutritionalData: nutritionalData, setNutritionalData }}>
+    <NutritionContext.Provider value={{ nutritionalData, setNutritionalData }}>
       {children}
     </NutritionContext.Provider>
   );
