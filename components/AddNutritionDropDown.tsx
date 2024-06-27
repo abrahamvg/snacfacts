@@ -16,7 +16,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import clsx from "clsx";
 import { Nutrient } from "@/types/types";
-import { useNutrition } from "@/providers/dataProvider";
+import { useNutrition } from "@/hooks/useNutritionHook";
 
 import {
   Command,

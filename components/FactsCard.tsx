@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useNutrition } from "@/providers/dataProvider";
+import { useNutrition } from "@/hooks/useNutritionHook";
 import { FeedbackDataEntry } from "@/types/types";
 import {
   Table,
