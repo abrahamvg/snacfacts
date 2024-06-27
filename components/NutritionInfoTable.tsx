@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Table,
   TableBody,
@@ -9,18 +7,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-} from "@radix-ui/react-dropdown-menu";
-import clsx from "clsx";
+
 import AddNutritionDropDown from "./AddNutritionDropDown";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
-import { Nutrient, TableDataEntry } from "@/types/types";
 import { Button } from "./ui/button";
 import { useNutrition } from "@/hooks/useNutritionHook";
-import {data} from "@/providers/constants"
+import {nutrientsData} from "@/providers/constants"
+import { Label } from "@radix-ui/react-select";
 
 export default function NutritionInfoTable({
   open,
@@ -44,10 +37,11 @@ export default function NutritionInfoTable({
       <div className="flex flex-row justify-between items-start h-24">
         <h3 className="font-bold text-xl w-1/3 text-wrap">Nutrition Info</h3>
         <div>
-          <AddNutritionDropDown data={data.nutrients} />
+          <AddNutritionDropDown data={nutrientsData.nutrients} />
         </div>
       </div>
       <div className="content mt-4">
+        <div className="h-64 overflow-y-auto masked-overflow">
         <Table>
           <TableHeader>
             <TableRow>
@@ -70,7 +64,7 @@ export default function NutritionInfoTable({
                       type="number"
                       value={nutrient.value}
                       placeholder="Enter weight"
-                      className="placeholder:text-neutral-950"
+                      className="placeholder:text-neutral-950 px-2 text-right"
                       onChange={(e) =>
                         changeTableData(
                           nutrient.nutrientInfo.label,
@@ -84,6 +78,11 @@ export default function NutritionInfoTable({
             })}
           </TableBody>
         </Table>
+        </div>
+        <div>
+          <Label></Label>
+        <Input id="servingSize" type="text" placeholder="100g" className="w-20 text-right mt-4" />
+        </div>
         <Button
           className="w-full mt-4 bg-transparent text-primary border-primary border-2 hover:bg-primary hover:text-neutral-50"
           onClick={() => setOpen(true)}

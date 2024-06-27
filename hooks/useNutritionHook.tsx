@@ -1,6 +1,5 @@
 'use client';
-import { dataProvider } from "@/providers/dataProvider";
-import { Nutrient, TableDataEntry } from "@/types/types";
+import { TableDataEntry } from "@/types/types";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 interface NutritionProviderProps {
