@@ -9,18 +9,16 @@ import { Nutrient } from "@/types/types";
 import { useDropDownData } from "@/hooks/useDropDownData";
 import { useNutrition } from "@/hooks/useNutritionHook";
 import { Upload } from "lucide-react";
-import {nutrientsData} from "@/providers/constants"
+import { nutrientsData } from "@/providers/constants";
 
 const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+if (!apiKey) {
+  throw new Error("GEMINI_API_KEY is not set in environment variables");
+}
+const genAI = new GoogleGenerativeAI(apiKey);
 
 export default function Test() {
-  const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-  });
-
-  const { dropDownData, setDropDownData } =
-    useDropDownData();
+  const { dropDownData, setDropDownData } = useDropDownData();
   const { setNutritionalData } = useNutrition();
   const [open, setOpen] = useState(false);
 
@@ -44,23 +42,25 @@ export default function Test() {
         reader.readAsDataURL(file);
 
         reader.onload = async () => {
-          const image = {
-            inlineData: {
-              data: reader.result.split(",")[1], // Extract base64 data
-              mimeType: file.type,
-            },
-          };
+          if (reader.result && typeof reader.result === "string") {
+            const image = {
+              inlineData: {
+                data: reader.result.split(",")[1], // Extract base64 data
+                mimeType: file.type,
+              },
+            };
 
-          // Use Google Generative AI to generate content
-          const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash",
-            generationConfig: { responseMimeType: "application/json" },
-          });
+            // Use Google Generative AI to generate content
+            const model = genAI.getGenerativeModel({
+              model: "gemini-1.5-flash",
+              generationConfig: { responseMimeType: "application/json" },
+            });
 
-          const result = await model.generateContent([prompt, image]);
-          const data = await JSON.parse(result.response.text());
+            const result = await model.generateContent([prompt, image]);
+            const data = await JSON.parse(result.response.text());
 
-          handleValues(data);
+            handleValues(data);
+          }
         };
 
         reader.onerror = (error) => {
