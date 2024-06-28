@@ -19,3 +19,12 @@ export type Nutrient = {
   unit: string;
   recommendedValue: number;
 };
+
+export type ComparisonData = {
+  [key: string]: {
+    name: string;
+    label: string;
+    value: string;
+    weight: number;
+  };
+}
