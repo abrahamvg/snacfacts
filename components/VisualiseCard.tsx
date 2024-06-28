@@ -22,9 +22,14 @@ import {
 import Image from "next/image";
 import { InfoIcon } from "lucide-react";
 
-export default function VisualiseCard() {
+export default function VisualiseCard({
+  perSize,
+  serveSize,
+}: {
+  perSize: number;
+  serveSize: number;
+}) {
   const { nutritionalData } = useNutrition();
-  const [open, setOpen] = useState(false);
   const [selectedNutrient, setSelectedNutrient] = useState<string>();
   // nutritionalData[0].nutrientInfo.value
 
@@ -34,7 +39,7 @@ export default function VisualiseCard() {
     })[0];
 
     return Math.round(
-      data.value / comparisonData[data.nutrientInfo.value].weight
+      data.value / comparisonData[data.nutrientInfo.value].weight / perSize * serveSize
     );
   };
 

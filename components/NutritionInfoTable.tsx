@@ -27,6 +27,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import FactsCard from "./FactsCard";
 import VisualiseCard from "./VisualiseCard";
+import { cn } from "@/lib/utils";
 
 export default function NutritionInfoTable({
   open,
@@ -38,7 +39,9 @@ export default function NutritionInfoTable({
   const { nutritionalData, setNutritionalData } = useNutrition();
   const [perSize, setPerSize] = useState(0);
   const [serveSize, setServeSize] = useState(0);
-  const [factCard, setFactCard] = useState("feedback");
+  const [factCard, setFactCard] = useState("");
+  const [showValidationErrorForPerSize, setShowValidationErrorForPerSize] = useState(false);
+  const [showValidationErrorForServeSize, setShowValidationErrorForServeSize] = useState(false);
 
   const changeTableData = (label: string, newValue: number) => {
     setNutritionalData((prevTableData) =>
@@ -46,6 +49,41 @@ export default function NutritionInfoTable({
         data.nutrientInfo.label === label ? { ...data, value: newValue } : data
       )
     );
+  };
+
+  const handleInputChangeServeSize = (value: string) => {
+    const newValue = Number(value);
+    if (newValue > 0) {
+      setServeSize(newValue);
+      setShowValidationErrorForServeSize(false);
+    } else {
+      setServeSize(1);
+    }
+  };
+  const handleInputChangeperServe = (value: string) => {
+    const newValue = Number(value);
+    if (newValue > 0) {
+      setPerSize(newValue);
+      setShowValidationErrorForPerSize(false);
+    } else {
+      setPerSize(1);
+    }
+  };
+
+  const handleOpen = () => {
+    if (perSize > 0 && serveSize > 0 && nutritionalData.length > 0) {
+      setOpen(true);
+      setFactCard("feedback");
+      setShowValidationErrorForPerSize(false);
+      setShowValidationErrorForServeSize(false);
+    } else {
+      if (perSize === 0) {
+        setShowValidationErrorForPerSize(true)
+      }
+      if (serveSize === 0) {
+        setShowValidationErrorForServeSize(true)
+      }
+    }
   };
 
   return (
@@ -102,9 +140,12 @@ export default function NutritionInfoTable({
               id="perSize"
               type="number"
               placeholder="100g"
-              className="w-20 text-right"
+              className={cn(
+                "w-20 text-right",
+                showValidationErrorForPerSize &&  "border-red-500"
+              )}
               value={perSize}
-              onChange={(e) => setPerSize(Number(e.target.value))}
+              onChange={(e) => handleInputChangeperServe(e.target.value)}
             />
           </div>
           <div className="flex flex-row w-full items-center mt-4 gap-2 justify-end">
@@ -113,50 +154,56 @@ export default function NutritionInfoTable({
               id="serveSize"
               type="number"
               placeholder="200g"
-              className="w-20 text-right"
+              className={cn(
+                "w-20 text-right",
+                showValidationErrorForServeSize &&  "border-red-500"
+              )}
               value={serveSize}
-              onChange={(e) => setServeSize(Number(e.target.value))}
+              onChange={(e) => handleInputChangeServeSize(e.target.value)}
             />
           </div>
           <Button
             className="w-full mt-4 bg-transparent text-primary border-primary border-2 hover:bg-primary hover:text-neutral-50"
-            onClick={() => setOpen(true)}
+            onClick={handleOpen}
           >
             Track
           </Button>
         </div>
       </div>
-      <div className="text-neutral-950 bg-neutral-50 w-full rounded-md p-4 mt-4">
-        <div className="flex flex-row justify-between items-start h-24">
-          <h3 className="font-bold text-xl w-1/3 text-wrap">Facts Card</h3>
-          <div>
-            <Select defaultValue={factCard} onValueChange={(value) => setFactCard(value)}>
-              <SelectTrigger className="w-[120px] bg-transparent border-2 border-primary color-primary">
-                <SelectValue defaultValue="feedback" placeholder="Feedback" />
-              </SelectTrigger>
-              <SelectContent align="end">
-                <SelectItem value="feedback">Feedback</SelectItem>
-                <SelectItem value="visualise">Visualise</SelectItem>
-              </SelectContent>
-            </Select>
+      {open && (
+        <div className="text-neutral-950 bg-neutral-50 w-full rounded-md p-4 mt-4">
+          <div className="flex flex-row justify-between items-start h-24">
+            <h3 className="font-bold text-xl w-1/3 text-wrap">Facts Card</h3>
+            <div>
+              <Select
+                defaultValue={factCard}
+                onValueChange={(value) => setFactCard(value)}
+              >
+                <SelectTrigger className="w-[120px] bg-transparent border-2 border-primary color-primary">
+                  <SelectValue defaultValue="feedback" placeholder="Feedback" />
+                </SelectTrigger>
+                <SelectContent align="end">
+                  <SelectItem value="feedback">Feedback</SelectItem>
+                  <SelectItem value="visualise">Visualise</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-        </div>
-        {
-          factCard === "feedback" ? (
+          {factCard === "feedback" ? (
             <FactsCard
-              // perSize={perSize}
-              // serveSize={serveSize}
+              perSize={perSize}
+              serveSize={serveSize}
               // data={nutritionalData}
             />
           ) : (
             <VisualiseCard
-              // perSize={perSize}
-              // serveSize={serveSize}
+              perSize={perSize}
+              serveSize={serveSize}
               // data={nutritionalData}
             />
-          )
-        }
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

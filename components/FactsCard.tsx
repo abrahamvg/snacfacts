@@ -21,18 +21,26 @@ import {
 import { InfoIcon } from "lucide-react";
 import clsx from "clsx";
 
-export default function FactsCard() {
+export default function FactsCard({
+  perSize,
+  serveSize,
+}: {
+  perSize: number;
+  serveSize: number;
+}) {
   const { nutritionalData } = useNutrition();
 
   const [nutrientFeedback, setNutrientFeedback] = useState<
     Record<string, FeedbackDataEntry>
   >({});
 
+  console.log("targetting re renders");
+
   useEffect(() => {
     if (nutritionalData.length > 0) {
       const newFeedback = nutritionalData.reduce((acc, nutrition) => {
         const consumptionPercentage = Math.round(
-          (nutrition.value / nutrition.nutrientInfo.recommendedValue) * 100
+          (nutrition.value / nutrition.nutrientInfo.recommendedValue / perSize) * 100 * serveSize
         );
 
         let feedback: string;
@@ -55,7 +63,7 @@ export default function FactsCard() {
 
       setNutrientFeedback(newFeedback);
     }
-  }, [nutritionalData]);
+  }, [nutritionalData, perSize, serveSize]);
 
   return (
     <div className="content mt-4 bg-neutral-100 rounded-md max-h-64 overflow-y-auto">
