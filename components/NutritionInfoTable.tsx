@@ -22,7 +22,7 @@ import AddNutritionDropDown from "./AddNutritionDropDown";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { useNutrition } from "@/hooks/useNutritionHook";
-import { nutrientsData } from "@/providers/constants";
+import { nutrientsData } from "@/lib/constants";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import FactsCard from "./FactsCard";

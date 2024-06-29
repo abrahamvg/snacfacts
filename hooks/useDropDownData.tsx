@@ -1,5 +1,5 @@
 "use client";
-import { nutrientsData } from "@/providers/constants";
+import { nutrientsData } from "@/lib/constants";
 import { Nutrient, TableDataEntry } from "@/types/types";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 

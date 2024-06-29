@@ -9,13 +9,8 @@ import { Nutrient } from "@/types/types";
 import { useDropDownData } from "@/hooks/useDropDownData";
 import { useNutrition } from "@/hooks/useNutritionHook";
 import { Upload } from "lucide-react";
-import { nutrientsData } from "@/providers/constants";
-
-const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-if (!apiKey) {
-  throw new Error("GEMINI_API_KEY is not set in environment variables");
-}
-const genAI = new GoogleGenerativeAI(apiKey);
+import { nutrientsData } from "@/lib/constants";
+import { textFromImage } from "@/lib/geminiAPI";
 
 export default function Test() {
   const { dropDownData, setDropDownData } = useDropDownData();
@@ -31,12 +26,6 @@ export default function Test() {
     if (file) {
       setOpen(true);
       try {
-        const prompt = `Return me a list of objects with values {label : <nutrient>, value : <quantity>} 
-        if you see nutrients and its quantity in the picture.
-        labels should be captialised and values should be a integer or a float which ever is appropriate.
-        Ignore all the other information including the units for each nutrition.
-        If you can\'t see any nutrition data, please return []`;
-
         // Read the selected file and prepare for API consumption
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -50,14 +39,8 @@ export default function Test() {
               },
             };
 
-            // Use Google Generative AI to generate content
-            const model = genAI.getGenerativeModel({
-              model: "gemini-1.5-flash",
-              generationConfig: { responseMimeType: "application/json" },
-            });
-
-            const result = await model.generateContent([prompt, image]);
-            const data = await JSON.parse(result.response.text());
+            const result = await textFromImage(image);
+            const data = await JSON.parse(result);
 
             handleValues(data);
           }
