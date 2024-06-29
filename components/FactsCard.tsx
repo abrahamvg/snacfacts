@@ -34,8 +34,6 @@ export default function FactsCard({
     Record<string, FeedbackDataEntry>
   >({});
 
-  console.log("targetting re renders");
-
   useEffect(() => {
     if (nutritionalData.length > 0) {
       const newFeedback = nutritionalData.reduce((acc, nutrition) => {
@@ -76,7 +74,7 @@ export default function FactsCard({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {nutritionalData.map((nutrient) => {
+          {nutritionalData && nutritionalData.map((nutrient) => {
             return (
               <TableRow key={nutrient.nutrientInfo.value}>
                 <TableCell className="w-2/4">
