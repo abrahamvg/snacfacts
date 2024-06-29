@@ -80,7 +80,7 @@ export default function FactsCard({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {nutritionalData &&
+          {/* {nutritionalData &&
             nutritionalData.map((nutrient) => {
               return (
                 <TableRow key={nutrient.nutrientInfo.value}>
@@ -125,7 +125,7 @@ export default function FactsCard({
                   </TableCell>
                 </TableRow>
               );
-            })}
+            })} */}
         </TableBody>
       </Table>
     </div>
