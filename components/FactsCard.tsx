@@ -28,19 +28,23 @@ export default function FactsCard({
   perSize: number;
   serveSize: number;
 }) {
-  const { nutritionalData } = useNutrition();
+  const { nutritionalData = [] } = useNutrition();
 
   const [nutrientFeedback, setNutrientFeedback] = useState<
     Record<string, FeedbackDataEntry>
   >({});
 
-  console.log("targetting renders")
+  console.log("targetting re-renders");
 
   useEffect(() => {
-    if (nutritionalData) {
+    if (nutritionalData.length > 0) {
       const newFeedback = nutritionalData.reduce((acc, nutrition) => {
         const consumptionPercentage = Math.round(
-          (nutrition.value / nutrition.nutrientInfo.recommendedValue / 1) * 100 * 1
+          (nutrition.value /
+            nutrition.nutrientInfo.recommendedValue /
+            perSize) *
+            100 *
+            serveSize
         );
 
         let feedback: string;
@@ -63,7 +67,7 @@ export default function FactsCard({
 
       setNutrientFeedback(newFeedback);
     }
-  }, [nutritionalData]);
+  }, [nutritionalData, perSize, serveSize]);
 
   return (
     <div className="content mt-4 bg-neutral-100 rounded-md max-h-64 overflow-y-auto">
@@ -76,51 +80,52 @@ export default function FactsCard({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {nutritionalData && nutritionalData.map((nutrient) => {
-            return (
-              <TableRow key={nutrient.nutrientInfo.value}>
-                <TableCell className="w-2/4">
-                  {nutrient.nutrientInfo.label +
-                    " (" +
-                    nutrient.nutrientInfo.unit +
-                    ")"}
-                </TableCell>
-                <TableCell className="w-2/4 text-right">
-                  <div
-                    className={clsx("inline", {
-                      "text-green-600":
-                        nutrientFeedback[nutrient.nutrientInfo.value]
-                          ?.feedback === "Low",
-                      "text-yellow-500":
-                        nutrientFeedback[nutrient.nutrientInfo.value]
-                          ?.feedback === "Medium",
-                      "text-red-600":
-                        nutrientFeedback[nutrient.nutrientInfo.value]
-                          ?.feedback === "High",
-                    })}
-                  >
-                    {nutrientFeedback[nutrient.nutrientInfo.value]?.feedback}
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <InfoIcon className="w-2 ml-1" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      className="min-w-fit p-2 text-xs text-right"
-                      align="end"
-                      side="top"
-                      sideOffset={-4}
+          {nutritionalData &&
+            nutritionalData.map((nutrient) => {
+              return (
+                <TableRow key={nutrient.nutrientInfo.value}>
+                  <TableCell className="w-2/4">
+                    {nutrient?.nutrientInfo.label +
+                      " (" +
+                      nutrient?.nutrientInfo.unit +
+                      ")"}
+                  </TableCell>
+                  <TableCell className="w-2/4 text-right">
+                    <div
+                      className={clsx("inline", {
+                        "text-green-600":
+                          nutrientFeedback[nutrient.nutrientInfo.value]
+                            ?.feedback === "Low",
+                        "text-yellow-500":
+                          nutrientFeedback[nutrient.nutrientInfo.value]
+                            ?.feedback === "Medium",
+                        "text-red-600":
+                          nutrientFeedback[nutrient.nutrientInfo.value]
+                            ?.feedback === "High",
+                      })}
                     >
-                      <div>
-                        {nutrientFeedback[nutrient.nutrientInfo.value]
-                          ?.percentage + "% of Daily Avg."}
-                      </div>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            );
-          })}
+                      {nutrientFeedback[nutrient.nutrientInfo.value]?.feedback}
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <InfoIcon className="w-2 ml-1" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className="min-w-fit p-2 text-xs text-right"
+                        align="end"
+                        side="top"
+                        sideOffset={-4}
+                      >
+                        <div>
+                          {nutrientFeedback[nutrient.nutrientInfo.value]
+                            ?.percentage + "% of Daily Avg."}
+                        </div>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
         </TableBody>
       </Table>
     </div>
