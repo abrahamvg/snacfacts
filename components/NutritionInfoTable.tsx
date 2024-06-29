@@ -28,6 +28,7 @@ import { useState } from "react";
 import FactsCard from "./FactsCard";
 import VisualiseCard from "./VisualiseCard";
 import { cn } from "@/lib/utils";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
 export default function NutritionInfoTable({
   open,
@@ -36,10 +37,10 @@ export default function NutritionInfoTable({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { nutritionalData, setNutritionalData } = useNutrition();
+  const { nutritionalData = [], setNutritionalData } = useNutrition();
   const [perSize, setPerSize] = useState(0);
   const [serveSize, setServeSize] = useState(0);
-  const [factCard, setFactCard] = useState("");
+  const [factCard, setFactCard] = useState("feedback");
   const [showValidationErrorForPerSize, setShowValidationErrorForPerSize] = useState(false);
   const [showValidationErrorForServeSize, setShowValidationErrorForServeSize] = useState(false);
 
@@ -73,7 +74,6 @@ export default function NutritionInfoTable({
   const handleOpen = () => {
     if (perSize > 0 && serveSize > 0 && nutritionalData.length > 0) {
       setOpen(true);
-      setFactCard("feedback");
       setShowValidationErrorForPerSize(false);
       setShowValidationErrorForServeSize(false);
     } else {
@@ -190,17 +190,19 @@ export default function NutritionInfoTable({
             </div>
           </div>
           {factCard === "feedback" ? (
-            <FactsCard
-              perSize={perSize}
-              serveSize={serveSize}
-              // data={nutritionalData}
-            />
+            <ErrorBoundary errorComponent={() => <div>An error occurred. Please try again later.</div>}>
+              <FactsCard
+                perSize={perSize}
+                serveSize={serveSize}
+              />
+            </ErrorBoundary>
           ) : (
-            <VisualiseCard
-              perSize={perSize}
-              serveSize={serveSize}
-              // data={nutritionalData}
-            />
+            <ErrorBoundary errorComponent={() => <div>An error occurred. Please try again later.</div>}>
+              <VisualiseCard
+                perSize={perSize}
+                serveSize={serveSize}
+              />
+            </ErrorBoundary>
           )}
         </div>
       )}

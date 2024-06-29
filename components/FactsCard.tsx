@@ -37,36 +37,36 @@ export default function FactsCard({
   console.log("targetting re-renders");
 
   useEffect(() => {
-    // if (nutritionalData.length > 0) {
-    //   const newFeedback = nutritionalData.reduce((acc, nutrition) => {
-    //     const consumptionPercentage = Math.round(
-    //       (nutrition.value /
-    //         nutrition.nutrientInfo.recommendedValue /
-    //         perSize) *
-    //         100 *
-    //         serveSize
-    //     );
+    if (nutritionalData.length > 0) {
+      const newFeedback = nutritionalData.reduce((acc, nutrition) => {
+        const consumptionPercentage = Math.round(
+          (nutrition.value /
+            nutrition.nutrientInfo.recommendedValue /
+            perSize) *
+            100 *
+            serveSize
+        );
 
-    //     let feedback: string;
+        let feedback: string;
 
-    //     if (consumptionPercentage > 100) {
-    //       feedback = "High";
-    //     } else if (consumptionPercentage <= 100 && consumptionPercentage > 85) {
-    //       feedback = "Medium";
-    //     } else {
-    //       feedback = "Low";
-    //     }
+        if (consumptionPercentage > 100) {
+          feedback = "High";
+        } else if (consumptionPercentage <= 100 && consumptionPercentage > 85) {
+          feedback = "Medium";
+        } else {
+          feedback = "Low";
+        }
 
-    //     acc[nutrition.nutrientInfo.value] = {
-    //       nutrientInfo: nutrition.nutrientInfo,
-    //       feedback: feedback,
-    //       percentage: consumptionPercentage,
-    //     };
-    //     return acc;
-    //   }, {} as Record<string, FeedbackDataEntry>);
+        acc[nutrition.nutrientInfo.value] = {
+          nutrientInfo: nutrition.nutrientInfo,
+          feedback: feedback,
+          percentage: consumptionPercentage,
+        };
+        return acc;
+      }, {} as Record<string, FeedbackDataEntry>);
 
-    //   setNutrientFeedback(newFeedback);
-    // }
+      setNutrientFeedback(newFeedback);
+    }
   }, [nutritionalData, perSize, serveSize]);
 
   return (
@@ -80,7 +80,7 @@ export default function FactsCard({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {/* {nutritionalData &&
+          {nutritionalData &&
             nutritionalData.map((nutrient) => {
               return (
                 <TableRow key={nutrient.nutrientInfo.value}>
@@ -125,7 +125,7 @@ export default function FactsCard({
                   </TableCell>
                 </TableRow>
               );
-            })} */}
+            })}
         </TableBody>
       </Table>
     </div>
