@@ -34,6 +34,8 @@ export default function FactsCard({
     Record<string, FeedbackDataEntry>
   >({});
 
+  console.log("targetting renders")
+
   useEffect(() => {
     if (nutritionalData.length > 0) {
       const newFeedback = nutritionalData.reduce((acc, nutrition) => {
