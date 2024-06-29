@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import clsx from "clsx";
-import { comparisonData } from "@/providers/constants";
+import { comparisonData } from "@/lib/constants";
 import {
   Select,
   SelectContent,
