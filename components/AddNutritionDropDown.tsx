@@ -77,10 +77,11 @@ export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
   return (
     <DropdownMenu open={open} modal={false}>
       <DropdownMenuTrigger
-        className="text-sm bg-primary text-neutral-50 p-2 rounded-md"
+        className="text-2xl font-light bg-secondary text-primary rounded-full h-10
+w-10 flex justify-center items-center"
         onClick={handleOpen}
       >
-        Add
+        +
       </DropdownMenuTrigger>
       {dropDownData.length > 0 ? (
         <DropdownMenuContent align="end">

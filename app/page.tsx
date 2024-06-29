@@ -10,14 +10,10 @@ import { useState } from "react";
 export default function Home() {
   const [open, setOpen] = useState(false);
   return (
-    <NutritionProvider>
       <main className="flex min-h-screen flex-col p-8 px-4 bg-background mb-24">
-        <DropDownDataProvider>
           {/* <Header/> */}
           <NutritionInfoTable open={open} setOpen={setOpen} />
           <Test />
-        </DropDownDataProvider>
       </main>
-    </NutritionProvider>
   );
 }
