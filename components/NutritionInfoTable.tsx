@@ -189,7 +189,7 @@ export default function NutritionInfoTable({
               </Select>
             </div>
           </div>
-          {factCard === "feedback" ? (
+          {/* {factCard === "feedback" ? (
             <ErrorBoundary errorComponent={() => <div>An error occurred. Please try again later.</div>}>
               <FactsCard
                 perSize={perSize}
@@ -203,7 +203,7 @@ export default function NutritionInfoTable({
                 serveSize={serveSize}
               />
             </ErrorBoundary>
-          )}
+          )} */}
         </div>
       )}
     </div>
