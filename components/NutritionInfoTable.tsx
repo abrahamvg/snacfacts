@@ -38,11 +38,13 @@ export default function NutritionInfoTable({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { nutritionalData = [], setNutritionalData } = useNutrition();
-  const [perSize, setPerSize] = useState(0);
-  const [serveSize, setServeSize] = useState(0);
+  const [perSize, setPerSize] = useState(100);
+  const [serveSize, setServeSize] = useState(20);
   const [factCard, setFactCard] = useState("feedback");
-  const [showValidationErrorForPerSize, setShowValidationErrorForPerSize] = useState(false);
-  const [showValidationErrorForServeSize, setShowValidationErrorForServeSize] = useState(false);
+  const [showValidationErrorForPerSize, setShowValidationErrorForPerSize] =
+    useState(false);
+  const [showValidationErrorForServeSize, setShowValidationErrorForServeSize] =
+    useState(false);
 
   const changeTableData = (label: string, newValue: number) => {
     setNutritionalData((prevTableData) =>
@@ -78,10 +80,10 @@ export default function NutritionInfoTable({
       setShowValidationErrorForServeSize(false);
     } else {
       if (perSize === 0) {
-        setShowValidationErrorForPerSize(true)
+        setShowValidationErrorForPerSize(true);
       }
       if (serveSize === 0) {
-        setShowValidationErrorForServeSize(true)
+        setShowValidationErrorForServeSize(true);
       }
     }
   };
@@ -142,7 +144,7 @@ export default function NutritionInfoTable({
               placeholder="100g"
               className={cn(
                 "w-20 text-right",
-                showValidationErrorForPerSize &&  "border-red-500"
+                showValidationErrorForPerSize && "border-red-500"
               )}
               value={perSize}
               onChange={(e) => handleInputChangeperServe(e.target.value)}
@@ -156,7 +158,7 @@ export default function NutritionInfoTable({
               placeholder="200g"
               className={cn(
                 "w-20 text-right",
-                showValidationErrorForServeSize &&  "border-red-500"
+                showValidationErrorForServeSize && "border-red-500"
               )}
               value={serveSize}
               onChange={(e) => handleInputChangeServeSize(e.target.value)}
@@ -175,35 +177,34 @@ export default function NutritionInfoTable({
           <div className="flex flex-row justify-between items-start h-24">
             <h3 className="font-bold text-xl w-1/3 text-wrap">Facts Card</h3>
             <div>
-              <Select
-                defaultValue={factCard}
-                onValueChange={(value) => setFactCard(value)}
+              <ErrorBoundary
+                errorComponent={() => (
+                  <div>An error occurred. Please try again later.</div>
+                )}
               >
-                <SelectTrigger className="w-[120px] bg-transparent border-2 border-primary color-primary">
-                  <SelectValue defaultValue="feedback" placeholder="Feedback" />
-                </SelectTrigger>
-                <SelectContent align="end">
-                  <SelectItem value="feedback">Feedback</SelectItem>
-                  <SelectItem value="visualise">Visualise</SelectItem>
-                </SelectContent>
-              </Select>
+                <Select
+                  defaultValue={factCard}
+                  onValueChange={(value) => setFactCard(value)}
+                >
+                  <SelectTrigger className="w-[120px] bg-transparent border-2 border-primary color-primary">
+                    <SelectValue
+                      defaultValue="feedback"
+                      placeholder="Feedback"
+                    />
+                  </SelectTrigger>
+                  <SelectContent align="end">
+                    <SelectItem value="feedback">Feedback</SelectItem>
+                    <SelectItem value="visualise">Visualise</SelectItem>
+                  </SelectContent>
+                </Select>
+              </ErrorBoundary>
             </div>
           </div>
-          {/* {factCard === "feedback" ? (
-            <ErrorBoundary errorComponent={() => <div>An error occurred. Please try again later.</div>}>
-              <FactsCard
-                perSize={perSize}
-                serveSize={serveSize}
-              />
-            </ErrorBoundary>
+          {factCard === "feedback" ? (
+            <FactsCard perSize={perSize} serveSize={serveSize} />
           ) : (
-            <ErrorBoundary errorComponent={() => <div>An error occurred. Please try again later.</div>}>
-              <VisualiseCard
-                perSize={perSize}
-                serveSize={serveSize}
-              />
-            </ErrorBoundary>
-          )} */}
+            <VisualiseCard perSize={perSize} serveSize={serveSize} />
+          )}
         </div>
       )}
     </div>
