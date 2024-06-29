@@ -103,7 +103,7 @@ export default function Test() {
   return (
     <div className="bg-white">
       <Label htmlFor="picture">
-        <div className="bg-primary shadow-md w-16 h-16 rounded-full fixed bottom-[24px] right-[20px] flex items-center justify-center">
+        <div className="bg-primary shadow-md w-16 h-16 rounded-full fixed bottom-[16px] right-[16px] flex items-center justify-center">
           {" "}
           <Upload />
         </div>
