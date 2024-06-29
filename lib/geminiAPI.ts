@@ -9,8 +9,6 @@ if (!apiKey) {
   throw new Error("GEMINI_API_KEY is not set in environment variables");
 }
 
-console.log(apiKey)
-
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
