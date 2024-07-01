@@ -23,7 +23,7 @@ export default function Page() {
   console.log();
 
   return (
-    <div className="px-[10%] bg-background-250">
+    <div className="px-[10%]">
       <h1
         className={`text-3xl font-bold text-foreground p-2 ${literata.className}`}
       >
