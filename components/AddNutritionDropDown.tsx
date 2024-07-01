@@ -30,10 +30,15 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { useDropDownData } from "@/hooks/useDropDownData";
+import { PlusIcon } from "lucide-react";
 
-export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
+export default function AddNutritionDropDown({
+  data,
+}: {
+  data: Nutrient[];
+}) {
   const [open, setOpen] = useState(false);
-  const [nutrientQuantity, setNutrientQuantity] = useState<number>(0);
+  const [nutrientQuantity, setNutrientQuantity] = useState<string>("");
   const [selectedNutrient, setSelectedNutrient] = useState<string>(
     data[0].value
   );
@@ -54,7 +59,7 @@ export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
     if (selectedData) {
       setNutritionalData((prevData) => [
         ...prevData,
-        { nutrientInfo: selectedData, value: nutrientQuantity },
+        { nutrientInfo: selectedData, value: Number(nutrientQuantity) },
       ]);
     } else {
       console.error("Selected data is undefined");
@@ -77,11 +82,10 @@ export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
   return (
     <DropdownMenu open={open} modal={false}>
       <DropdownMenuTrigger
-        className="text-2xl font-light bg-secondary text-primary rounded-full h-10
-w-10 flex justify-center items-center"
+        className="bg-background-200 text-foreground rounded-full h-8 w-8 flex justify-center items-center p-[6px]"
         onClick={handleOpen}
       >
-        +
+        <PlusIcon />
       </DropdownMenuTrigger>
       {dropDownData.length > 0 ? (
         <DropdownMenuContent align="end">
@@ -89,7 +93,7 @@ w-10 flex justify-center items-center"
           <DropdownMenuSeparator />
           <Command>
             <CommandInput placeholder="Type or search..." />
-            <CommandList className="masked-overflow">
+            <CommandList className="masked-overflow max-h-[150px] overflow-y-auto overflow-x-hidden">
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup heading="Nutrients">
                 {dropDownData.map((nutrient) => (
@@ -109,15 +113,15 @@ w-10 flex justify-center items-center"
             </CommandList>
           </Command>
 
-          <DropdownMenuItem>
+          <DropdownMenuItem className="focus:bg-inherit focus:text-black ">
             <Input
-              type="number"
+              type="text"
               placeholder="Enter weight"
               value={nutrientQuantity}
               onChange={(e) => {
-                setNutrientQuantity(Number(e.target.value));
+                setNutrientQuantity(e.target.value);
               }}
-              className="w-full placeholder:text-neutral-950 mt-2"
+              className="w-full placeholder:text-neutral-950 mt-2 border-primary"
             />
           </DropdownMenuItem>
           <DropdownMenuSeparator />

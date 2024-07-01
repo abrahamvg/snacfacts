@@ -1,18 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
-// const { GoogleGenerativeAI } = require("@google/generative-ai");
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Nutrient } from "@/types/types";
 import { useDropDownData } from "@/hooks/useDropDownData";
 import { useNutrition } from "@/hooks/useNutritionHook";
-import { Upload } from "lucide-react";
+import { ScanEyeIcon, ScanLineIcon, ScanTextIcon, Upload } from "lucide-react";
 import { nutrientsData } from "@/lib/constants";
-import { nutirentFromImage } from "@/lib/geminiAPI";
+import { ingredientFromImage, nutirentFromImage } from "@/lib/geminiAPI";
+import Image from "next/image";
 
-export default function Test() {
+export default function ScanImageButton({ dataType, setDataFunction }: { dataType: string, setDataFunction: React.Dispatch<React.SetStateAction<any>> }) {
   const { dropDownData, setDropDownData } = useDropDownData();
   const { setNutritionalData } = useNutrition();
   const [open, setOpen] = useState(false);
@@ -39,10 +38,20 @@ export default function Test() {
               },
             };
 
-            const result = await nutirentFromImage(image);
-            const data = await JSON.parse(result);
+            if (dataType === "nutrient") {
+              const result = await nutirentFromImage(image);
+              const data = await JSON.parse(result);
 
-            handleValues(data);
+              handleValues(data);
+            } 
+
+            if (dataType === "ingredient") {
+              const result = await ingredientFromImage(image);
+              const data = await JSON.parse(result);
+              setDataFunction(data);
+              setOpen(false);
+            } 
+
           }
         };
 
@@ -58,7 +67,7 @@ export default function Test() {
   };
   const handleValues = (data: { label: string; value: number }[]) => {
     setOpen(false);
-    setNutritionalData([]);
+    setDataFunction([]);
 
     let updatedDropDownData = [...nutrientsData.nutrients];
 
@@ -69,7 +78,7 @@ export default function Test() {
 
       if (selectedDataIndex !== -1) {
         const selectedData = updatedDropDownData[selectedDataIndex];
-        setNutritionalData((prevData) => [
+        setDataFunction((prevData: Nutrient[]) => [
           ...prevData,
           { nutrientInfo: selectedData, value: dataValue.value },
         ]);
@@ -84,12 +93,12 @@ export default function Test() {
   };
 
   return (
-    <div className="bg-white">
-      <Label htmlFor="picture">
-        <div className="bg-primary shadow-md w-16 h-16 rounded-full fixed bottom-[16px] right-[16px] flex items-center justify-center">
-          {" "}
-          <Upload />
-        </div>
+    <div>
+      <Label
+        htmlFor="picture"
+        className="bg-background-200 text-foreground rounded-full h-8 w-8 flex justify-center items-center p-[6px]"
+      >
+        <ScanTextIcon />
       </Label>
       {open && (
         <div className="fixed top-0 left-0 h-full w-full">

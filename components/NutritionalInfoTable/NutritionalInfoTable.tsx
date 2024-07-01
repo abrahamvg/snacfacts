@@ -72,8 +72,8 @@ export default function NutritionalInfoTable() {
         <Table className="masked-overflow ">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-3/4 h-fit py-2 font-semibold">Nutrition</TableHead>
-              <TableHead className="w-1/4 text-right h-fit py-2 font-semibold">Amount</TableHead>
+              <TableHead className="w-3/4 h-fit py-2 font-black">Nutrition</TableHead>
+              <TableHead className="w-1/4 text-right h-fit py-2 font-black">Amount</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
