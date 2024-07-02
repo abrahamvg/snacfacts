@@ -16,15 +16,21 @@ import { useState } from "react";
 import { useNutrition } from "@/hooks/useNutritionHook";
 import { cn } from "@/lib/utils";
 
-export default function NutritionalInfoTable() {
-    const { nutritionalData = [], setNutritionalData } = useNutrition();
-  const [perSize, setPerSize] = useState(100);
-  const [serveSize, setServeSize] = useState(20);
+export default function NutritionalInfoTable({
+  perSize,
+  serveSize,
+  setPerSize,
+  setServeSize,
+}: {
+  perSize: number;
+  serveSize: number;
+  setPerSize: React.Dispatch<React.SetStateAction<number>>;
+  setServeSize: React.Dispatch<React.SetStateAction<number>>;
+}) {
+  const { nutritionalData = [], setNutritionalData } = useNutrition();
   const [factCard, setFactCard] = useState("feedback");
-  const [showValidationErrorForPerSize, setShowValidationErrorForPerSize] =
-    useState(false);
-  const [showValidationErrorForServeSize, setShowValidationErrorForServeSize] =
-    useState(false);
+  const [showValidationErrorForPerSize, setShowValidationErrorForPerSize] = useState(false);
+  const [showValidationErrorForServeSize, setShowValidationErrorForServeSize] = useState(false);
 
   const changeTableData = (label: string, newValue: number) => {
     setNutritionalData((prevTableData) =>
@@ -72,8 +78,12 @@ export default function NutritionalInfoTable() {
         <Table className="masked-overflow ">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-3/4 h-fit py-2 font-black">Nutrition</TableHead>
-              <TableHead className="w-1/4 text-right h-fit py-2 font-black">Amount</TableHead>
+              <TableHead className="w-3/4 h-fit py-2 font-black">
+                Nutrition
+              </TableHead>
+              <TableHead className="w-1/4 text-right h-fit py-2 font-black">
+                Amount
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
