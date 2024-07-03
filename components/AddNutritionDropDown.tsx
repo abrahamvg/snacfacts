@@ -31,12 +31,9 @@ import {
 } from "@/components/ui/command";
 import { useDropDownData } from "@/hooks/useDropDownData";
 import { PlusIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-export default function AddNutritionDropDown({
-  data,
-}: {
-  data: Nutrient[];
-}) {
+export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
   const [open, setOpen] = useState(false);
   const [nutrientQuantity, setNutrientQuantity] = useState<string>("");
   const [selectedNutrient, setSelectedNutrient] = useState<string>(
@@ -56,33 +53,33 @@ export default function AddNutritionDropDown({
       (nutrient) => nutrient.value === selectedNutrient
     );
 
-    if (selectedData) {
+    if (selectedData && !Number.isNaN(Number(nutrientQuantity))) {
       setNutritionalData((prevData) => [
         ...prevData,
         { nutrientInfo: selectedData, value: Number(nutrientQuantity) },
       ]);
+
+      // Filter out the selected nutrient
+      const updatedDropDownData = dropDownData.filter(
+        (nutrient) => nutrient.value !== selectedNutrient
+      );
+
+      setDropDownData(updatedDropDownData);
+      if (updatedDropDownData.length > 0) {
+        setSelectedNutrient(updatedDropDownData[0].value);
+      }
+
+      // Close the dropdown
+      setOpen(false);
     } else {
       console.error("Selected data is undefined");
     }
-
-    // Filter out the selected nutrient
-    const updatedDropDownData = dropDownData.filter(
-      (nutrient) => nutrient.value !== selectedNutrient
-    );
-
-    setDropDownData(updatedDropDownData);
-    if (updatedDropDownData.length > 0) {
-      setSelectedNutrient(updatedDropDownData[0].value);
-    }
-
-    // Close the dropdown
-    setOpen(false);
   };
 
   return (
     <DropdownMenu open={open} modal={false}>
       <DropdownMenuTrigger
-        className="bg-background-200 text-foreground rounded-full h-8 w-8 flex justify-center items-center p-[6px]"
+        className="bg-background-200 text-foreground rounded-full h-10 w-10 flex justify-center items-center p-[6px] active:bg-background-250"
         onClick={handleOpen}
       >
         <PlusIcon />
@@ -121,7 +118,12 @@ export default function AddNutritionDropDown({
               onChange={(e) => {
                 setNutrientQuantity(e.target.value);
               }}
-              className="w-full placeholder:text-neutral-950 mt-2 border-primary"
+              className={clsx(
+                "w-full placeholder:text-neutral-950 mt-2 border-2",
+                Number.isNaN(Number(nutrientQuantity))
+                  ? "border-red-500"
+                  : "border-primary"
+              )}
             />
           </DropdownMenuItem>
           <DropdownMenuSeparator />

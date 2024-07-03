@@ -11,7 +11,7 @@ import { nutrientsData } from "@/lib/constants";
 import { ingredientFromImage, nutirentFromImage } from "@/lib/geminiAPI";
 import Image from "next/image";
 
-export default function ScanImageButton({ dataType, setDataFunction }: { dataType: string, setDataFunction: React.Dispatch<React.SetStateAction<any>> }) {
+export default function ScanImageButton({ dataType, setDataFunction, setFetchingDataFunction }: { dataType: string, setDataFunction: React.Dispatch<React.SetStateAction<any>>, setFetchingDataFunction: React.Dispatch<React.SetStateAction<any>> }) {
   const { dropDownData, setDropDownData } = useDropDownData();
   const { setNutritionalData } = useNutrition();
   const [open, setOpen] = useState(false);
@@ -23,7 +23,7 @@ export default function ScanImageButton({ dataType, setDataFunction }: { dataTyp
     const file = e.target.files[0];
     e.preventDefault();
     if (file) {
-      setOpen(true);
+      setFetchingDataFunction(true);
       try {
         // Read the selected file and prepare for API consumption
         const reader = new FileReader();
@@ -49,7 +49,7 @@ export default function ScanImageButton({ dataType, setDataFunction }: { dataTyp
               const result = await ingredientFromImage(image);
               const data = await JSON.parse(result);
               setDataFunction(data);
-              setOpen(false);
+              setFetchingDataFunction(false);
             } 
 
           }
@@ -66,7 +66,7 @@ export default function ScanImageButton({ dataType, setDataFunction }: { dataTyp
     }
   };
   const handleValues = (data: { label: string; value: number }[]) => {
-    setOpen(false);
+    setFetchingDataFunction(false);
     setDataFunction([]);
 
     let updatedDropDownData = [...nutrientsData.nutrients];
@@ -96,7 +96,7 @@ export default function ScanImageButton({ dataType, setDataFunction }: { dataTyp
     <div>
       <Label
         htmlFor="picture"
-        className="bg-background-200 text-foreground rounded-full h-8 w-8 flex justify-center items-center p-[6px]"
+        className="bg-background-200 text-foreground rounded-full h-10 w-10 flex justify-center items-center p-[6px] active:bg-background-250"
       >
         <ScanTextIcon />
       </Label>

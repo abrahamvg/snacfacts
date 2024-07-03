@@ -13,13 +13,17 @@ import { nutrientsData } from "@/lib/constants";
 import { getScore } from "@/lib/geminiAPI";
 import { SmileIcon } from "lucide-react";
 import { Literata } from "next/font/google";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import clsx from "clsx";
+import NutritionalInfoTableSkeleton from "@/components/NutritionalInfoTable/NutritionalInfoTableSkeleton";
+import IngredientInfo from "@/components/IngredientInfo/IngredientInfo";
+import IngredientInfoSkeleton from "@/components/IngredientInfo/IngredientInfoSkeleton";
 
 const literata = Literata({ subsets: ["latin"] });
 const foodTypes = [
@@ -50,12 +54,33 @@ export default function Page() {
   const [perSize, setPerSize] = useState(100);
   const [serveSize, setServeSize] = useState(20);
   const [resultData, setResultData] = useState<result>();
+  const [inputCheck, setInputCheck] = useState(false);
+  const [fetchingNutrient, setFetchingNutrient] = useState(false);
+  const [fetchingIngredient, setFetchingIngredient] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const ref = useRef<NodeJS.Timeout | null>(null);
 
   const handleData = async () => {
-    if (!foodType || !ingredients || !perSize || !serveSize || !nutritionalData)
+    const scrollDown = () => {
+      window.scrollTo({
+        top: window.scrollY + 500, // Adjust this value for the desired scroll distance
+        behavior: 'smooth'
+      });
+    };
+
+    if (
+      !foodType ||
+      !ingredients ||
+      !perSize ||
+      !serveSize ||
+      !nutritionalData
+    ) {
+      setInputCheck(true);
       return;
+    }
+
+    setOpen(true);
     const nutrients = nutritionalData.reduce((acc: any, data) => {
       acc.push({
         label: data.nutrientInfo.label,
@@ -67,8 +92,9 @@ export default function Page() {
     }, []);
 
     const result = await getScore(nutrients, ingredients, foodType);
-    console.log(JSON.parse(result));
     setResultData(JSON.parse(result));
+    scrollDown()
+    setOpen(false)
   };
 
   useEffect(() => {
@@ -88,7 +114,7 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="px-[7.5%]">
+    <div className="px-[7.5%] mb-12">
       <h1
         className={`text-5xl font-bold text-foreground p-2 ${literata.className}`}
       >
@@ -96,7 +122,7 @@ export default function Page() {
       </h1>
       <div>
         <div className="my-2 mt-4">
-          <Label htmlFor="foodType" className="text-base">
+          <Label htmlFor="foodType" className="text-lg">
             {" "}
             Enter Food Type
           </Label>
@@ -104,8 +130,13 @@ export default function Page() {
             placeholder={placeholder}
             id="foodType"
             type="text"
-            className="border-2"
-            onChange={(e) => setFoodType(e.target.value)}
+            className={clsx("border-2 text-base px-2 py-1 mt-1 mb-3", {
+              "border-red-500": inputCheck,
+            })}
+            onChange={(e) => {
+              if (inputCheck) setInputCheck(false);
+              setFoodType(e.target.value);
+            }}
             onMouseEnter={() => {
               if (ref.current) {
                 clearInterval(ref.current);
@@ -147,13 +178,15 @@ export default function Page() {
                   <ScanImageButton
                     dataType="nutrient"
                     setDataFunction={setNutritionalData}
+                    setFetchingDataFunction={setFetchingNutrient}
                   />
                 </div>
                 <div>
                   <AddNutritionDropDown data={nutrientsData.nutrients} />
                 </div>
               </div>
-              {nutritionalData.length > 0 ? (
+              {fetchingNutrient && <NutritionalInfoTableSkeleton />}
+              {nutritionalData.length > 0 && !fetchingNutrient ? (
                 <NutritionalInfoTable
                   perSize={perSize}
                   serveSize={serveSize}
@@ -161,12 +194,14 @@ export default function Page() {
                   setServeSize={setServeSize}
                 />
               ) : (
-                <div className="max-h-48 overflow-y-auto bg-white rounded-md mt-4 text-background-100 py-4">
-                  <h3 className="text-sxl font-bold p-2 text-center text-wrap">
-                    Nothing to dispay{" "}
-                    <SmileIcon className="mx-auto w-16 h-16 mt-2 " />
-                  </h3>
-                </div>
+                !fetchingNutrient && (
+                  <div className="max-h-48 overflow-y-auto bg-white rounded-md mt-4 text-background-100 py-4">
+                    <h3 className="text-sxl font-bold p-2 text-center text-wrap">
+                      Nothing to dispay{" "}
+                      <SmileIcon className="mx-auto w-16 h-16 mt-2 " />
+                    </h3>
+                  </div>
+                )
               )}
             </div>
           </TabsContent>
@@ -180,37 +215,18 @@ export default function Page() {
                   <ScanImageButton
                     dataType="ingredient"
                     setDataFunction={setIngredients}
+                    setFetchingDataFunction={setFetchingIngredient}
                   />
                 </div>
               </div>
-              <div>
-                <Textarea
-                  className="bg-white mt-4 text-xs"
-                  placeholder="Enter Ingredients in comma sperated format"
-                  value={ingredients}
-                  onChange={(e) => setIngredients(e.target.value)}
-                  rows={8}
+              {fetchingIngredient ? (
+                <IngredientInfoSkeleton />
+              ) : (
+                <IngredientInfo
+                  ingredients={ingredients}
+                  setIngredients={setIngredients}
                 />
-              </div>
-              <div className="mt-4">
-                <div className="max-h-[120px] overflow-y-auto flex flex-wrap text-[10px] gap-x-1 gap-y-2">
-                  {ingredients.length > 0 ? (
-                    ingredients.split(/,\s*(?![^()]*\))/).map(
-                      (ingredient, index) =>
-                        ingredient.trim().length > 0 && (
-                          <div
-                            key={index}
-                            className="px-2 py-1 bg-muted/25 border-primary border rounded-full"
-                          >
-                            {ingredient}
-                          </div>
-                        )
-                    )
-                  ) : (
-                    <div></div>
-                  )}
-                </div>
-              </div>
+              )}
             </div>
           </TabsContent>
         </Tabs>
@@ -266,7 +282,9 @@ export default function Page() {
                             key={index}
                           >
                             <AccordionTrigger>
-                              <div className="w-56 overflow-hidden text-left truncate text-ellipsis">{ingredient.ingredient}</div>
+                              <div className="w-56 overflow-hidden text-left truncate text-ellipsis">
+                                {ingredient.ingredient}
+                              </div>
                             </AccordionTrigger>
                             <AccordionContent>
                               {ingredient.reason}
@@ -320,6 +338,22 @@ export default function Page() {
           </div>
         </div>
       )}
+
+      <div
+        className={clsx(
+          "w-full min-h-screen bg-background-200 fixed top-0 left-0 flex justify-center items-center",
+          {
+            "animate-slide-down": open,
+            "animate-slide-up": !open,
+          }
+        )}
+      >
+        <h1
+          className={`text-2xl w-4/5 text-wrap text-center ${literata.className}`}
+        >
+          Preparing the<br/> <span className="text-5xl">Results</span>
+        </h1>
+      </div>
     </div>
   );
 }
