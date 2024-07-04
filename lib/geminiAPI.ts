@@ -153,7 +153,7 @@ export async function getScore(
     const result = await model.generateContent([prompt]);
     return result.response.text();
   } catch (error) {
-    console.error("Error in ingredientFromImage:", error);
-    throw new Error("Failed to process image");
+    console.error("Error in getScore method:", error);
+    throw new Error("Failed to analyse food content");
   }
 }

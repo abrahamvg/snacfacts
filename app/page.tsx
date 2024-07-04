@@ -50,7 +50,7 @@ export default function Home() {
           </h2>
           <div className="space-y-8 overflow-x-clip">
             <div className="flex flex-row justify-end gap-4 h-64 relative ">
-              <div className="feature bg-white rounded-3xl absolute z-10 p-1 -left-[16%] top-1/2 -translate-y-1/2 w-fit h-fit">
+              <div className="feature bg-white rounded-3xl absolute z-10 p-1 -left-[50px] top-1/2 -translate-y-1/2 w-fit h-fit">
                 <Image
                   src={"/images/feature1.png"}
                   width={1000}

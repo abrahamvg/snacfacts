@@ -72,12 +72,11 @@ export default function Page() {
 
     if (
       !foodType ||
-      !ingredients ||
       !perSize ||
       !serveSize ||
       !nutritionalData
     ) {
-      setInputCheck(true);
+      if(foodType.length === 0) setInputCheck(true);
       return;
     }
 
