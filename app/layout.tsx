@@ -4,6 +4,8 @@ import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 import { NutritionProvider } from "@/hooks/useNutritionHook";
 import { DropDownDataProvider } from "@/hooks/useDropDownData";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 
 
@@ -21,9 +23,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <NutritionProvider>
         <DropDownDataProvider>
-          <body className={Satoshi.className}>
+          <body className={`${Satoshi.className} relative`}>
+            <Navbar/>
             {children}
             <Analytics />
+            <Footer/>
           </body>
         </DropDownDataProvider>
       </NutritionProvider>

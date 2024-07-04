@@ -57,3 +57,4 @@ export const Satoshi = localFont({
 })
 
 export const literata = Literata({ subsets: ["latin"] }); 
+export const literataItalic = Literata({ subsets: ['latin'], style: 'italic' })
