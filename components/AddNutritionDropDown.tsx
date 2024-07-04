@@ -30,10 +30,12 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { useDropDownData } from "@/hooks/useDropDownData";
+import { PlusIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
   const [open, setOpen] = useState(false);
-  const [nutrientQuantity, setNutrientQuantity] = useState<number>(0);
+  const [nutrientQuantity, setNutrientQuantity] = useState<string>("");
   const [selectedNutrient, setSelectedNutrient] = useState<string>(
     data[0].value
   );
@@ -51,36 +53,36 @@ export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
       (nutrient) => nutrient.value === selectedNutrient
     );
 
-    if (selectedData) {
+    if (selectedData && !Number.isNaN(Number(nutrientQuantity))) {
       setNutritionalData((prevData) => [
         ...prevData,
-        { nutrientInfo: selectedData, value: nutrientQuantity },
+        { nutrientInfo: selectedData, value: Number(nutrientQuantity) },
       ]);
+
+      // Filter out the selected nutrient
+      const updatedDropDownData = dropDownData.filter(
+        (nutrient) => nutrient.value !== selectedNutrient
+      );
+
+      setDropDownData(updatedDropDownData);
+      if (updatedDropDownData.length > 0) {
+        setSelectedNutrient(updatedDropDownData[0].value);
+      }
+
+      // Close the dropdown
+      setOpen(false);
     } else {
       console.error("Selected data is undefined");
     }
-
-    // Filter out the selected nutrient
-    const updatedDropDownData = dropDownData.filter(
-      (nutrient) => nutrient.value !== selectedNutrient
-    );
-
-    setDropDownData(updatedDropDownData);
-    if (updatedDropDownData.length > 0) {
-      setSelectedNutrient(updatedDropDownData[0].value);
-    }
-
-    // Close the dropdown
-    setOpen(false);
   };
 
   return (
     <DropdownMenu open={open} modal={false}>
       <DropdownMenuTrigger
-        className="text-sm bg-primary text-neutral-50 p-2 rounded-md"
+        className="bg-background-200 text-foreground rounded-full h-10 w-10 flex justify-center items-center p-[6px] active:bg-background-250"
         onClick={handleOpen}
       >
-        Add
+        <PlusIcon />
       </DropdownMenuTrigger>
       {dropDownData.length > 0 ? (
         <DropdownMenuContent align="end">
@@ -88,7 +90,7 @@ export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
           <DropdownMenuSeparator />
           <Command>
             <CommandInput placeholder="Type or search..." />
-            <CommandList className="masked-overflow">
+            <CommandList className="masked-overflow max-h-[150px] overflow-y-auto overflow-x-hidden">
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup heading="Nutrients">
                 {dropDownData.map((nutrient) => (
@@ -108,15 +110,20 @@ export default function AddNutritionDropDown({ data }: { data: Nutrient[] }) {
             </CommandList>
           </Command>
 
-          <DropdownMenuItem>
+          <DropdownMenuItem className="focus:bg-inherit focus:text-black ">
             <Input
-              type="number"
+              type="text"
               placeholder="Enter weight"
               value={nutrientQuantity}
               onChange={(e) => {
-                setNutrientQuantity(Number(e.target.value));
+                setNutrientQuantity(e.target.value);
               }}
-              className="w-full placeholder:text-neutral-950 mt-2"
+              className={clsx(
+                "w-full placeholder:text-neutral-950 mt-2 border-2",
+                Number.isNaN(Number(nutrientQuantity))
+                  ? "border-red-500"
+                  : "border-primary"
+              )}
             />
           </DropdownMenuItem>
           <DropdownMenuSeparator />
