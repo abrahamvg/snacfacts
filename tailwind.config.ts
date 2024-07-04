@@ -79,22 +79,22 @@ const config = {
         },
         "slide-down": {
           from : {
-            transform: "translateY(-100%)",
+            transform: "translateY(0)",
             opacity: "0"
           },
           to : {
-            transform: "translateY(0)",
+            transform: "translateY(100%)",
             opacity: "1"
           }
         },
         "slide-up": {
           from : {
             
-            transform: "translateY(0)",
+            transform: "translateY(100%)",
             opacity: "1"
           },
           to : {
-            transform: "translateY(-100%)",
+            transform: "translateY(0)",
             opacity: "0"
           }
         }

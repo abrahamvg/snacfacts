@@ -13,7 +13,7 @@ import { nutrientsData } from "@/lib/constants";
 import { getScore } from "@/lib/geminiAPI";
 import { SmileIcon } from "lucide-react";
 import { Literata } from "next/font/google";
-import { Suspense, useEffect, useRef, useState } from "react";
+import React, { Component, Suspense, useEffect, useRef, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -24,6 +24,7 @@ import clsx from "clsx";
 import NutritionalInfoTableSkeleton from "@/components/NutritionalInfoTable/NutritionalInfoTableSkeleton";
 import IngredientInfo from "@/components/IngredientInfo/IngredientInfo";
 import IngredientInfoSkeleton from "@/components/IngredientInfo/IngredientInfoSkeleton";
+import { cn } from "@/lib/utils";
 
 const literata = Literata({ subsets: ["latin"] });
 const foodTypes = [
@@ -57,7 +58,7 @@ export default function Page() {
   const [inputCheck, setInputCheck] = useState(false);
   const [fetchingNutrient, setFetchingNutrient] = useState(false);
   const [fetchingIngredient, setFetchingIngredient] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [openState, setOpenState] = useState("");
 
   const ref = useRef<NodeJS.Timeout | null>(null);
 
@@ -65,7 +66,7 @@ export default function Page() {
     const scrollDown = () => {
       window.scrollTo({
         top: window.scrollY + 500, // Adjust this value for the desired scroll distance
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     };
 
@@ -80,7 +81,7 @@ export default function Page() {
       return;
     }
 
-    setOpen(true);
+    setOpenState("animate-slide-down");
     const nutrients = nutritionalData.reduce((acc: any, data) => {
       acc.push({
         label: data.nutrientInfo.label,
@@ -93,8 +94,8 @@ export default function Page() {
 
     const result = await getScore(nutrients, ingredients, foodType);
     setResultData(JSON.parse(result));
-    scrollDown()
-    setOpen(false)
+    setOpenState("animate-slide-up");
+    scrollDown();
   };
 
   useEffect(() => {
@@ -114,7 +115,7 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="px-[7.5%] mb-12">
+    <div className="px-[7.5%] mb-4 mt-20 pt-8 min-h-screen">
       <h1
         className={`text-5xl font-bold text-foreground p-2 ${literata.className}`}
       >
@@ -338,20 +339,17 @@ export default function Page() {
           </div>
         </div>
       )}
-
       <div
-        className={clsx(
-          "w-full min-h-screen bg-background-200 fixed top-0 left-0 flex justify-center items-center",
-          {
-            "animate-slide-down": open,
-            "animate-slide-up": !open,
-          }
+        className={cn(
+          "w-full min-h-screen bg-background-200 fixed bottom-full z-30 left-0 flex justify-center items-center",
+          openState
         )}
       >
         <h1
           className={`text-2xl w-4/5 text-wrap text-center ${literata.className}`}
         >
-          Preparing the<br/> <span className="text-5xl">Results</span>
+          Preparing the
+          <br /> <span className="text-5xl">Results</span>
         </h1>
       </div>
     </div>
