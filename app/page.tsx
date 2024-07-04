@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import GlowBall from "@/components/ui/glowBall";
 import { literata, literataItalic } from "@/fonts/fonts";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
@@ -41,17 +42,25 @@ export default function Home() {
           </Link>
         </div>
       </main>
-      <section className="flex min-h-screen flex-col py-8 bg-background mb-24"> 
+      <section className="flex min-h-screen flex-col py-8 bg-background mb-24">
         <div className="w-full text-center">
           <h2 className={`text-[44px] ${literata.className} mb-12`}>
             {" "}
             Features
           </h2>
           <div className="space-y-8 overflow-x-clip">
-            <div className="flex flex-row justify-between gap-4 h-64 relative ">
-              <div className="feature bg-white w-1/2 h-full rounded-r-3xl relative z-10"></div>
+            <div className="flex flex-row justify-end gap-4 h-64 relative ">
+              <div className="feature bg-white rounded-3xl absolute z-10 p-1 -left-[16%] top-1/2 -translate-y-1/2 w-fit h-fit">
+                <Image
+                  src={"/images/feature1.png"}
+                  width={1000}
+                  height={1000}
+                  alt="feature1"
+                  className="rounded-3xl h-64 w-fit"
+                />
+              </div>
               <GlowBall size={400} className="-top-[4rem] -left-[6rem]" />
-              <div className="description w-1/2 h-full rounded-md mr-4 flex flex-col items-center justify-center text-left relative z-10">
+              <div className="description w-40 h-full rounded-md mr-4 flex flex-col items-center justify-center text-left relative z-10">
                 <h4 className="text-2xl font-bold w-full">SnacAnalyse</h4>
                 <p className="text-base font-light">
                   Analyse nutritional information to get meaningful information
@@ -60,7 +69,9 @@ export default function Home() {
               </div>
             </div>
             <div className="flex justify-between gap-4 h-64 flex-row-reverse relative">
-              <div className="feature bg-white w-1/2 h-full rounded-l-3xl relative z-10"></div>
+              <div className="feature bg-white w-1/2 h-full rounded-l-3xl relative z-10 text-black flex flex-col justify-center items-center">
+                In Process
+              </div>
               <GlowBall size={400} className="-top-[4rem] -right-[8rem]" />
               <div className="description w-1/2 h-full rounded-md ml-4 flex flex-col items-center justify-center text-left  relative z-10">
                 <h4 className="text-2xl font-bold w-full">NutriVisualise</h4>
