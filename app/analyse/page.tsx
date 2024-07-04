@@ -341,7 +341,7 @@ export default function Page() {
       )}
       <div
         className={cn(
-          "w-full min-h-screen bg-background-200 fixed bottom-full z-30 left-0 flex justify-center items-center",
+          "w-full min-h-screen bg-background-200 fixed bottom-full z-40 left-0 flex justify-center items-center",
           openState
         )}
       >
